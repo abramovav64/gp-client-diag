@@ -1,0 +1,32 @@
+[Alterator Entry]
+Type = diag
+Name = gp-local-diag
+DisplayName = Local group policy diagnostic tool
+DisplayName[ru_RU] = Групповые политики на клиенте
+Comment = Diagnostic tool comment
+Comment[ru_RU] = Инструмент диагностики применения групповых политик на клиенте
+Icon = system-run
+
+[rpm_status]
+DisplayName = Check gpupdate packet
+DisplayName[ru_RU] = Проверка пакета gpupdate
+
+[gpupdate_setup_status]
+DisplayName = State of group policy
+DisplayName[ru_RU] = Состояние gpupdate-setup
+
+[gpupdate_system_timer_status]
+DisplayName = Systemd system gpupdate.timer status
+DisplayName[ru_RU] = Состояние системного процесса gpupdate.timer
+
+[gpupdate_system_scripts_status]
+DisplayName = Systemd system gpupdate scripts status
+DisplayName[ru_RU] = Состояние системного процесса обработки скриптов
+
+[gpupdate_system_scripts_cache]
+DisplayName = Systemd system gpupdate scripts cache status
+DisplayName[ru_RU] = Наличие файлов в каталоге со скриптами для системы
+
+[gpupdate_users_scripts_cache]
+DisplayName = Systemd users gpupdate scripts cache status
+DisplayName[ru_RU] = Наличие файлов в каталоге со скриптами для пользователей
