@@ -107,6 +107,7 @@ task()
 rpm_status()
 {
 	rpm -qi gpupdate | grep "Version"
+	echo "RPM :"
 }
 
 #Статус gpupdate-setup
@@ -136,37 +137,35 @@ gpupdate_system_scripts_status()
 #Наличие файлов в каталоге со скриптами для системы
 gpupdate_system_scripts_cache()
 {
-	ls -Rl /var/cache/gpupdate_scripts_cache/machine/ | grep "итого 0" && return 1 || return 0
+	local xreturn=1
+	local ssc=
+	local dir_sc="/var/cache/gpupdate_scripts_cache/machine/"
+	ssc=$(find $dir_sc -type f | wc -l)
+#	[ $ssc -ne 0 ] && xreturn=0
+	echo "В каталоге /var/cache/gpupdate_scripts_cache/machine/ файлов: $ssc"
+	if [ $ssc -ne 0 ]
+	then
+	    find $dir_sc -type f -printf "%f\n"
+	    xreturn=0
+	fi
+	[ $xreturn -ne 0 ] && return 1 || return 0
 }
 
 #Наличие файлов в каталоге со скриптами для пользователей
 gpupdate_users_scripts_cache()
 {
 	local xreturn=1
-	for file in /var/cache/gpupdate_scripts_cache/users/*
-	do
-	if [ -d "$file" ]
+	local usc=
+	local dir_uc="/var/cache/gpupdate_scripts_cache/users/"
+	usc=$(find $dir_uc -type f | wc -l)
+	echo "В каталоге $dir_uc файлов: $usc"
+	if [ $usc -ne 0 ]
 	then
-		echo "$file"
-		ls -Rl $file | grep "итого 0" || xreturn=0
-		elif [ -f "$file" ]
-		then
-		echo "$file is a file"
+	    find $dir_uc -type f -printf "%f\n"
+	    xreturn=0
 	fi
-	done
-	if [[ "$xreturn" -eq "1" ]]
-	then
-	return 1
-	else
-	return 0
-	fi
+	[ $xreturn -ne 0 ] && return 1 || return 0
 }
-
-is_gigabyte()
-{
-	/usr/sbin/dmidecode -s baseboard-manufacturer | grep -q "^Gigabyte Technology"
-}
-
 
 task rpm_status
 task gpupdate_setup_status
@@ -175,4 +174,5 @@ task gpupdate_system_timer_status
 task gpupdate_system_scripts_status
 task gpupdate_system_scripts_cache
 task gpupdate_users_scripts_cache
+
 exit "$global_retval"
