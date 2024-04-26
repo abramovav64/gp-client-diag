@@ -17,6 +17,8 @@ PROG_VERSION='0.0.1'
 cmd="run"
 global_retval=0
 
+declare -a MACHINE_SCRIPT			#Список имен загруженных скриптов для системы
+
 print_version()
 {
 	cat <<EOF
@@ -139,13 +141,18 @@ gpupdate_system_scripts_cache()
 {
 	local xreturn=1
 	local ssc=
+	local per=
+	local per2=
 	local dir_sc="/var/cache/gpupdate_scripts_cache/machine/"
-	ssc=$(find $dir_sc -type f | wc -l)
-#	[ $ssc -ne 0 ] && xreturn=0
-	echo "В каталоге /var/cache/gpupdate_scripts_cache/machine/ файлов: $ssc"
-	if [ $ssc -ne 0 ]
+	[[ -d "$dir_sc" ]] && ssc=$(find $dir_sc -type f | wc -l) || echo "Каталог пустой"
+	[[ $ssc -ne 0 ]] && echo "В каталоге $dir_sc файлов: $ssc"
+	if [[ $ssc -ne 0 ]]
 	then
-	    find $dir_sc -type f -printf "%f\n"
+		per=$(find $dir_sc -type f)
+		for i in $per; do
+			per2=$(file -i $i)
+			echo ${per2#*machine}
+		done
 	    xreturn=0
 	fi
 	[ $xreturn -ne 0 ] && return 1 || return 0
@@ -156,16 +163,28 @@ gpupdate_users_scripts_cache()
 {
 	local xreturn=1
 	local usc=
+	local per=
+	local per2=
 	local dir_uc="/var/cache/gpupdate_scripts_cache/users/"
-	usc=$(find $dir_uc -type f | wc -l)
-	echo "В каталоге $dir_uc файлов: $usc"
-	if [ $usc -ne 0 ]
+	[[ -d "$dir_uc" ]] && usc=$(find $dir_uc -type f | wc -l) || echo "Каталог пустой"
+	[[ $usc -ne 0 ]] && echo "В каталоге $dir_uc файлов: $usc"
+	if [[ $usc -ne 0 ]]
 	then
-	    find $dir_uc -type f -printf "%f\n"
+		per=$(find $dir_uc -type f)
+		for i in $per; do
+			per2=$(file -i $i)
+			echo ${per2#*users}
+		done
 	    xreturn=0
 	fi
 	[ $xreturn -ne 0 ] && return 1 || return 0
 }
+
+#Проверка кодировки файлов со скриптами для системы
+#gpupdate_system_scripts_status()
+#{
+
+#}
 
 task rpm_status
 task gpupdate_setup_status
