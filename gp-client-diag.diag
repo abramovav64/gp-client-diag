@@ -19,14 +19,22 @@ DisplayName[ru_RU] = Состояние gpupdate-setup
 DisplayName = Systemd system gpupdate.timer status
 DisplayName[ru_RU] = Состояние системного процесса gpupdate.timer
 
+[gpupdate_gpo_cache]
+DisplayName = gpo cache
+DisplayName[ru_RU] = Новые политики в системе
+
 [gpupdate_system_scripts_status]
 DisplayName = Systemd system gpupdate scripts status
-DisplayName[ru_RU] = Состояние системного процесса обработки скриптов
+DisplayName[ru_RU] = Скрипты: состояние системного процесса обработки
 
 [gpupdate_system_scripts_cache]
-DisplayName = Systemd system gpupdate scripts cache status
+DisplayName = System gpupdate scripts cache status
 DisplayName[ru_RU] = Скрипты: наличие в каталоге файлов для системы
 
 [gpupdate_users_scripts_cache]
-DisplayName = Systemd users gpupdate scripts cache status
+DisplayName = Users gpupdate scripts cache status
 DisplayName[ru_RU] = Скрипты: наличие в каталоге файлов для пользователей
+
+[gpupdate_mount_config]
+DisplayName = Auto mount confif files
+DisplayName[ru_RU] = Монтирование диска: наличие конфигурационных файлов

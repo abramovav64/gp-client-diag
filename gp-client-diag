@@ -180,18 +180,58 @@ gpupdate_users_scripts_cache()
 	[ $xreturn -ne 0 ] && return 1 || return 0
 }
 
-#Проверка кодировки файлов со скриптами для системы
-#gpupdate_system_scripts_status()
-#{
+#Проверка новых GPT
+gpupdate_gpo_cache()
+{
+	local hsn=
+	local domain=
+	local path_gpo_cache=
+	local num_gpo_cache=
+	local gpo_today=
+	hsn=$(hostname)
+	[[ -z "$hsn" ]] || domain=${hsn#*.} && domain=${domain^^}
+	[[ -z "$domain" ]] || path_gpo_cache="/var/cache/samba/gpo_cache/$domain/POLICIES"
+	num_gpo_cache=$(ls $path_gpo_cache | wc -l)
+	echo "GPO в каталоге локального хранилища политик: $num_gpo_cache"
+	[[ $num_gpo_cache -eq 0 ]] && return 1
+	gpo_today=$(find $path_gpo_cache -mmin -60 -maxdepth 1)
+	echo "Обновления за текущий час: "
+	for i in $gpo_today; do
+		echo ${i##*/}
+	done
+}
 
-#}
+#Наличие конфигурационных файлов для монтирования дисков
+gpupdate_mount_config()
+{
+	local xreturn=1
+	local asc=
+	local per=
+	local per2=
+	local dir_auto="/etc/auto.master.gpupdate.d/"
+	[[ -d "$dir_auto" ]] && asc=$(find $dir_auto -type f | wc -l) || echo "Каталог пустой"
+	[[ $asc -ne 0 ]] && echo "В каталоге $dir_auto файлов: $asc"
+	if [[ $asc -ne 0 ]]
+	then
+		echo "Обновления за текущий час:"
+		per=$(find $dir_auto -type f -mmin -60 | sort)
+		for i in $per; do
+			#per2=$(file -i $i)
+			echo ${i##*/}
+		done
+	    xreturn=0
+	fi
+	[ $xreturn -ne 0 ] && return 1 || return 0
+}
 
 task rpm_status
 task gpupdate_setup_status
 task gpupdate_system_timer_status
 #task gpupdate_user_timer_status
+task gpupdate_gpo_cache
 task gpupdate_system_scripts_status
 task gpupdate_system_scripts_cache
 task gpupdate_users_scripts_cache
+task gpupdate_mount_config
 
 exit "$global_retval"
